@@ -1,27 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BasicEnemy : MonoBehaviour
+public class BasicEnemy : NetworkBehaviour
 {
 
     int enemyHealth;
     [SerializeField] private float distance;
     [SerializeField] private float speed;
+    private Vector2 enemyPos;
+    Animator animator;
+    public enum EnemyState { patrol, seek};
 
-    Rigidbody2D rb;
+    public EnemyState enemyState;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        enemyState = EnemyState.patrol;
     }
 
+    // sync when they join
     void Update()
     {
-        transform.position = new Vector2(transform.position.x + speed * Time.deltaTime, transform.position.y);
+        switch (enemyState)
+        {
+            case EnemyState.patrol:
+                {
+                    EnemyPosUpdateClientRPC(enemyPos);
+                }
+                break;
+            case EnemyState.seek:
+                {
 
-        //rb.velocity = new Vector2(transform.position.x, transform.position.y) * speed;
+                }
+                break;
+        }
+    }
+
+    [ClientRpc]
+    private void EnemyPosUpdateClientRPC(Vector2 _enemyPos)
+    {
+        transform.position = _enemyPos;
+        MoveEnemy();
+    }
+
+    private void MoveEnemy()
+    {
+        transform.position = new Vector2(Mathf.PingPong(Time.time * speed, distance), 0);
+        enemyPos = transform.position;
     }
 
     int flipCounter;
@@ -30,19 +59,11 @@ public class BasicEnemy : MonoBehaviour
         if (col.gameObject.CompareTag("Bullet"))
         {
             enemyHealth++;
+            animator.SetBool("IsSprint", true);
             if (enemyHealth == 2)
             {
-                Destroy(gameObject);
+               Destroy(gameObject);
             }
-        }
-         
-       if (!col.gameObject.CompareTag("Bullet") || !col.gameObject.CompareTag("Ground"))
-       {
-            if (flipCounter == 0)
-            {     
-                transform.Rotate(180f, 180f, 180f);
-                flipCounter++;
-            }  
-       }
+        }      
     }
 }

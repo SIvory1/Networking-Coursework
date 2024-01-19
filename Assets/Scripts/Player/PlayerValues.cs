@@ -13,6 +13,7 @@ public class PlayerValues : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
         health.Value = maxHealth;
         healthText.text = "" + health.Value;
     }
@@ -20,33 +21,34 @@ public class PlayerValues : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner) return;
-        //if (Input.GetMouseButtonDown(0))
-        //    TakeDamage(1);
+        if (Input.GetMouseButtonDown(0))
+            // almost works, whoever takes dmg- on the other screen they are 1 health behind
+            TakeDamage(1);
     }
 
-    //public void TakeDamage(int dmg)
-    //{
-    //    health.Value -= dmg;
+    public void TakeDamage(int dmg)
+    {
+        health.Value -= dmg;
 
-    //    UpdateHealthServerRPC();
-    //    CheckForDeath();
-    //}
+        UpdateHealthServerRPC();
+        CheckForDeath();
+    }
 
-    //[ClientRpc]
-    //void UpdateHealthClientRPC()
-    //{
-    //    GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
-    //    foreach (GameObject obj in _healhText)
-    //    {
-    //        obj.GetComponent<PlayerValues>().healthText.text = "" + (obj.GetComponent<PlayerValues>().health.Value);
-    //    }
-    //}
+    [ClientRpc]
+    void UpdateHealthClientRPC()
+    {
+        GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject obj in _healhText)
+        {
+            obj.GetComponent<PlayerValues>().healthText.text = "" + (obj.GetComponent<PlayerValues>().health.Value);
+        }
+    }
 
-    //[ServerRpc]
-    //void UpdateHealthServerRPC()
-    //{
-    //    UpdateHealthClientRPC();
-    //}
+    [ServerRpc]
+    void UpdateHealthServerRPC()
+    {
+        UpdateHealthClientRPC();
+    }
 
     void CheckForDeath()
     {

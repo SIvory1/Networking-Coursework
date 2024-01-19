@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Unity.VisualScripting;
-using Unity.Burst.Intrinsics;
-using UnityEngine.U2D;
-
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -53,8 +49,8 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
-        Shoot();
         if (!IsOwner) return;
+        Shoot();
         MovePlayer();
         Dash();
         Jump();

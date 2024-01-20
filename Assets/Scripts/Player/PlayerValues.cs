@@ -31,6 +31,7 @@ public class PlayerValues : NetworkBehaviour
         health.Value -= dmg;
 
         UpdateHealthServerRPC();
+        //call ui
         CheckForDeath();
     }
 
@@ -50,12 +51,14 @@ public class PlayerValues : NetworkBehaviour
         UpdateHealthClientRPC();
     }
 
+    // player cant trigger this themself 
     void CheckForDeath()
     {
         if (health.Value <= 0)
         {
             print("death con" + OwnerClientId);
-        }
+            GameManager.instance.uiManager.GameOverUIServerRPC();
+        } 
     }
 
     void OnGUI()
@@ -68,10 +71,4 @@ public class PlayerValues : NetworkBehaviour
             x++;
         }
     }
-
 }
-//GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
-//foreach (GameObject obj in _healhText)
-//{
-//    obj.GetComponent<PlayerValues>().healthText.text = "" + obj.GetComponent<PlayerValues>().health.Value;
-//}

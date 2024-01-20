@@ -9,7 +9,7 @@ public class AudioManager : NetworkBehaviour
     [SerializeField] private AudioClip zapNoise;
 
     [SerializeField] GameObject audioObject;
-
+   
     [ServerRpc(RequireOwnership = false)]
     public void PlayZapServerRPC()
     {

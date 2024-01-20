@@ -17,6 +17,10 @@ public class BasicEnemy : NetworkBehaviour
 
     GameObject[] _player;
     private float[] distanceFromPlayer;
+    GameObject closetPlayer;
+
+    Vector2 desiredVelocity;
+    Vector3 steeringVelocity;
 
     private void Start()
     {
@@ -32,6 +36,15 @@ public class BasicEnemy : NetworkBehaviour
     // sync when they join
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            enemyState = EnemyState.seek;
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            enemyState = EnemyState.patrol;
+        }
+
         switch (enemyState)
         {
             case EnemyState.patrol:
@@ -41,31 +54,32 @@ public class BasicEnemy : NetworkBehaviour
                 break;
             case EnemyState.seek:
                 {
-                    FindClosestPlayer();
-                    Seek();
+                    FindClosestPlayerClientRpc();
+                    SeekClientRpc(enemyPos);
                 }
                 break;
         }   
-
     }
 
-    Vector2 desiredVelocity;
-    Vector3 steeringVelocity;
-    public void Seek()
+    [ClientRpc]
+    public void SeekClientRpc(Vector3 _enemyPos)
     {
         // Get the desired velocity for seek and limit to maxSpeed
-        desiredVelocity = Vector3.Normalize(closetPlayer.transform.position - transform.position) * speed;
+        desiredVelocity = Vector3.Normalize(closetPlayer.transform.position - _enemyPos) * speed;
 
         // Calculate steering velocity
         steeringVelocity = desiredVelocity - rb.velocity;
 
         transform.position += steeringVelocity * Time.deltaTime;
+
+        enemyPos = transform.position;
     }
 
-    GameObject closetPlayer;
 
-    void FindClosestPlayer()
+    [ClientRpc]
+    void FindClosestPlayerClientRpc()
     {
+
         for (int i = 0; i < _player.Length; i++)
         {
             if (_player[i] != null)

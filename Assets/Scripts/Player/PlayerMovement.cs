@@ -146,11 +146,16 @@ public class PlayerMovement : NetworkBehaviour
     void OnCollisionEnter2D(Collision2D target)
     {
         if (!IsOwner) return;
+
         if (target.gameObject.CompareTag("Ground"))
         {
             GameManager.instance.audioManager.PlayZapServerRPC();
             jumpCounter = jumpCounterMax;
             playerAnimator.SetBool("isJump", false);
+        }
+        if (target.gameObject.CompareTag("Enemy"))
+        {
+            // do something
         }
     }
 }

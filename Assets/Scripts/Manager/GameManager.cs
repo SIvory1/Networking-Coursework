@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
 
     public static GameManager instance;
@@ -30,5 +31,17 @@ public class GameManager : MonoBehaviour
     {
         uiManager = GetComponent<UIManager>();
         audioManager = GetComponent<AudioManager>();
+    }
+
+    private void Update()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
+    }
+
+    GameObject[] players;
+    private void OnClientConnectedCallback(ulong clientId)
+    {
+       // players = GameObject.FindGameObjectsWithTag("Player");
+        print("jogn");
     }
 }

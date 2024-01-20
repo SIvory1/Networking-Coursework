@@ -22,7 +22,7 @@ public class PlayerValues : NetworkBehaviour
         }
     }
 
-    private void Update()
+private void Update()
     {
         if (!IsOwner) return;
         if (Input.GetMouseButtonDown(0))

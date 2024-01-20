@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameManager : NetworkBehaviour
+public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
@@ -35,13 +35,34 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
+      //  if (IsClient)
+      //  {
+           // NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+     //   }
     }
 
-    GameObject[] players;
-    private void OnClientConnectedCallback(ulong clientId)
+    private void OnClientConnected(ulong clientId)
     {
-       // players = GameObject.FindGameObjectsWithTag("Player");
-        print("jogn");
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            //GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+            //    for (int i = 0; i < enemies.Length; i++)
+            //    {
+            //        enemies[i].GetComponent<BasicEnemy>()._player = GameObject.FindGameObjectsWithTag("Player");
+            //        enemies[i].GetComponent<BasicEnemy>().distanceFromPlayer = new float[enemies[i].GetComponent<BasicEnemy>()._player.Length];
+            //    }
+            print("john");
+            
+        }
+
     }
+
+
+    void OnPlayerConnected()
+    {
+        print("ronbald");
+
+    }
+
 }

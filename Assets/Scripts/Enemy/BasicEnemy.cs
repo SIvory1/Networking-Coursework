@@ -18,8 +18,8 @@ public class BasicEnemy : NetworkBehaviour
     public enum EnemyState { patrol, seek};
     public EnemyState enemyState;
 
-    GameObject[] _player;
-    private float[] distanceFromPlayer;
+    public GameObject[] _player;
+    public float[] distanceFromPlayer;
     Vector3 closetPlayer;
 
     Vector2 desiredVelocity;
@@ -32,21 +32,31 @@ public class BasicEnemy : NetworkBehaviour
 
     // when player shoots get the player and then do everything
 
+
+    // explain all this, talk about how it only works for 2 people and therefore to improve make it so
+    // // multipel peopel could join
     private void Start()
     {
-        _player = GameObject.FindGameObjectsWithTag("Player");
-        print(_player.Length);
 
+        StartCoroutine(FindPlayers());
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
 
         enemyState = EnemyState.patrol;
-        distanceFromPlayer = new float[_player.Length];
 
         isAgro = true;
 
         priorX = transform.position.x;
+    }
+
+    // cant press too quick or gamebreaks
+    IEnumerator FindPlayers()
+    {
+        yield return new WaitForSeconds(5f);
+        _player = GameObject.FindGameObjectsWithTag("Player");
+        print(_player.Length);
+        distanceFromPlayer = new float[_player.Length];
     }
 
     // sync when they join
@@ -66,23 +76,31 @@ public class BasicEnemy : NetworkBehaviour
         {
             case EnemyState.patrol:
                 {
-                    EnemyPosUpdateClientRPC(enemyPos, isAgro, currentX, priorX);
+                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
+                    SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
             case EnemyState.seek:
                 {
                     FindClosestPlayerClientRpc();
                     SeekClientRpc(enemyPos, closetPlayer);
+                    SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
         }
     }
 
+
+    // lock to x and flip to look
     [ClientRpc]
     public void SeekClientRpc(Vector3 _enemyPos, Vector3 _closetPlayer)
     {
+
+        Vector3 updatedEniPos = new(_enemyPos.x, 0, 0);
+        Vector3 updatedPlayerPos = new(_closetPlayer.x, 0, 0);
+
         // Get the desired velocity for seek and limit to maxSpeed
-        desiredVelocity = Vector3.Normalize(_closetPlayer - _enemyPos) * speed;
+        desiredVelocity = Vector3.Normalize(updatedPlayerPos - updatedEniPos) * speed;
 
         // Calculate steering velocity
         steeringVelocity = desiredVelocity - rb.velocity;
@@ -124,18 +142,17 @@ public class BasicEnemy : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void EnemyPosUpdateClientRPC(Vector3 _enemyPos, bool _isAgro, float _currentX, float _priorX)
+    private void EnemyPosUpdateClientRPC(Vector3 _enemyPos, bool _isAgro)
     {
         if (_isAgro)
         {
             transform.position = _enemyPos;
             MoveEnemy();
-            SpriteFlip(_currentX, _priorX);
-
         }
     }
 
-    private void SpriteFlip(float _currentX, float _priorX)
+    [ClientRpc]
+    private void SpriteFlipClientRpc(float _currentX, float _priorX)
     {
         if (_priorX > _currentX)
         {

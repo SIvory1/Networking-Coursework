@@ -136,12 +136,6 @@ public class PlayerMovement : NetworkBehaviour
         bulletSpawnTransform.GetComponent<NetworkObject>().Spawn(true);
     }
 
-    //[ClientRpc]
-    //private void InstantiateBulletClientRpc(float x, float y, float z, Quaternion rot)
-    //{
-    //    bulletSpawnTransform = Instantiate(bulletPrefab, new Vector3(x, y, z), rot);
-    //    bulletSpawnTransform.GetComponent<NetworkObject>().Spawn(true);
-    //}
 
     void OnCollisionEnter2D(Collision2D target)
     {
@@ -156,6 +150,22 @@ public class PlayerMovement : NetworkBehaviour
         if (target.gameObject.CompareTag("Enemy"))
         {
             // do something
+            CollideWithEnemyServerRpc();
         }
+    }
+
+    [ClientRpc]
+    void CollideWithEnemyClientRpc()
+    {
+        rb.AddForce(Vector2.up * 250);
+        print("up");
+        GetComponentInChildren<SpriteRenderer>().color = Color.red;
+        //  GetComponent<PlayerValues>().TakeDamage(1);
+    }
+
+    [ServerRpc]
+    void CollideWithEnemyServerRpc()
+    {
+        CollideWithEnemyClientRpc();
     }
 }

@@ -11,8 +11,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float playerBaseSpeed;
     private float moveX;
     private float moveY;
-    private bool facingRight;
-
+ 
     [Header("Jump")]
     [SerializeField] private float jumpForce;
     private int jumpCounter;
@@ -33,6 +32,8 @@ public class PlayerMovement : NetworkBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
 
+    bool iFrame;
+
     // we trust the client
     // updated tick rate
 
@@ -42,6 +43,7 @@ public class PlayerMovement : NetworkBehaviour
         playerAnimator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+   
         jumpCounter = jumpCounterMax;
         dashCounter = dashCounterMax;
         playerSpeed = playerBaseSpeed;
@@ -72,7 +74,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [ClientRpc] void FlipPlayerClientRPC(float _moveX)
     {
-        if (_moveX > 0)
+        if (_moveX >= 0)
         {
             sprite.flipX = false;
         }
@@ -120,12 +122,12 @@ public class PlayerMovement : NetworkBehaviour
         dashCounter = dashCounterMax;
     }
 
-    // pyut on tiemnr so less lag
     void Shoot()
     {
         if (Input.GetMouseButtonDown(0))
         {
             InstantiateBulletServerRpc(spawnPoint.position.x, spawnPoint.position.y, 0, spawnPoint.rotation);
+            GameManager.instance.audioManager.PlayZapServerRPC();
         }
     }
 
@@ -136,36 +138,45 @@ public class PlayerMovement : NetworkBehaviour
         bulletSpawnTransform.GetComponent<NetworkObject>().Spawn(true);
     }
 
-
     void OnCollisionEnter2D(Collision2D target)
     {
         if (!IsOwner) return;
 
-        if (target.gameObject.CompareTag("Ground"))
+        if (target.gameObject.CompareTag("Ground") || target.gameObject.CompareTag("Enemy")|| target.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.audioManager.PlayZapServerRPC();
             jumpCounter = jumpCounterMax;
             playerAnimator.SetBool("isJump", false);
         }
         if (target.gameObject.CompareTag("Enemy"))
         {
             // do something
-            CollideWithEnemyServerRpc();
+            CollideWithEnemyServerRpc(iFrame);
         }
     }
 
     [ClientRpc]
-    void CollideWithEnemyClientRpc()
+    void CollideWithEnemyClientRpc(bool _iFrame)
     {
+        if (_iFrame) return; 
         rb.AddForce(Vector2.up * 250);
         print("up");
         GetComponentInChildren<SpriteRenderer>().color = Color.red;
-        //  GetComponent<PlayerValues>().TakeDamage(1);
+        // GetComponent<PlayerValues>().TakeDamage(1);
+        StartCoroutine(ResetIframes());
+        iFrame = true;
     }
 
     [ServerRpc]
-    void CollideWithEnemyServerRpc()
+    void CollideWithEnemyServerRpc(bool _iFrame)
     {
-        CollideWithEnemyClientRpc();
+        CollideWithEnemyClientRpc(_iFrame);
     }
+
+    IEnumerator ResetIframes()
+    {
+        yield return new WaitForSeconds(1f);
+        iFrame = false;
+        GetComponentInChildren<SpriteRenderer>().color = Color.white;
+    }
+
 }

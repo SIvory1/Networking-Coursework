@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
      //   }
     }
 
+
+    // in lobby system do it after when everyone joins easy peasy
     private void OnClientConnected(ulong clientId)
     {
         if (clientId == NetworkManager.Singleton.LocalClientId)

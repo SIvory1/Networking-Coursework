@@ -76,8 +76,9 @@ public class BasicEnemy : NetworkBehaviour
         {
             case EnemyState.patrol:
                 {
-                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
-                    SpriteFlipClientRpc(currentX, priorX);
+                    EnemyPosUpdateServerRPC(enemyPos, isAgro);
+                    MoveEnemy();
+                     SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
             case EnemyState.seek:
@@ -119,7 +120,7 @@ public class BasicEnemy : NetworkBehaviour
         {
             if (_player[i] != null)
             {
-                distanceFromPlayer[i] = (_player[i].transform.position-transform.position).magnitude;
+                distanceFromPlayer[i] = (_player[i].transform.position - transform.position).magnitude;
             }
         }
 
@@ -137,18 +138,13 @@ public class BasicEnemy : NetworkBehaviour
         else
         {
             closetPlayer = _player[0].transform.position;
-        }
-        //float min = distanceFromPlayer.Min();    
+        } 
     }
 
-    [ClientRpc]
-    private void EnemyPosUpdateClientRPC(Vector3 _enemyPos, bool _isAgro)
+    [ServerRpc]
+    private void EnemyPosUpdateServerRPC(Vector3 _enemyPos, bool _isAgro)
     {
-        if (_isAgro)
-        {
-            transform.position = _enemyPos;
-            MoveEnemy();
-        }
+       EnemyPosUpdateClientRPC(_enemyPos, _isAgro);
     }
 
     [ClientRpc]
@@ -168,9 +164,18 @@ public class BasicEnemy : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    private void EnemyPosUpdateClientRPC(Vector3 _enemyPos, bool _isAgro)
+    {
+        if (_isAgro)
+        {
+            transform.position = _enemyPos;    
+        }
+    }
+
     private void MoveEnemy()
     {
-        transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), -1.6f, 0);
+        transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), -3.91f, 0);
         enemyPos = transform.position;     
     }
 
@@ -179,12 +184,17 @@ public class BasicEnemy : NetworkBehaviour
     {
         if (col.gameObject.CompareTag("Bullet"))
         {
-            enemyHealth++;         
-            if (enemyHealth == 2)
+            enemyHealth++;
+            switch (enemyHealth)
             {
-                isAgro = false;
-                animator.SetBool("TakenDMG", true);
-                StartCoroutine(DestroyEnemy());
+                case (1):
+                    enemyState = EnemyState.seek;
+                    break;
+               case (2):
+                    isAgro = false;
+                    animator.SetBool("TakenDMG", true);
+                    StartCoroutine(DestroyEnemy());
+                    break;
             }
         }      
     }

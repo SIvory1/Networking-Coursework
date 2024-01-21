@@ -13,8 +13,8 @@ public class MovingPlatform : MonoBehaviour
     void Update()
     {
         if (!verticalPlatform)
-         transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), transform.position.y, transform.position.z);
+         transform.position = new Vector3(distance * Mathf.Cos(Time.time * speed), transform.position.y, transform.position.z);
           else
-            transform.position = new Vector3(transform.position.x, Mathf.PingPong(Time.time * speed, distance), transform.position.z);
+            transform.position = new Vector3(transform.position.x, distance * Mathf.Cos(Time.time * speed), transform.position.z);
     }
 }

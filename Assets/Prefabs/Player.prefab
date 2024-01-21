@@ -240,8 +240,8 @@ Transform:
   m_GameObject: {fileID: 2453641287736042711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.028, y: -0.006, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 5.1213, y: -2.514, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8897233470677127586}
@@ -265,7 +265,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 69b5c5038e44c8d43b556766c620fb80, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -285,7 +285,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 2453641287736042711}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 69b5c5038e44c8d43b556766c620fb80, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -308,7 +308,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.19492918, y: 0.1658608}
+  m_Offset: {x: 0.19492918, y: 0.17179573}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -319,7 +319,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.55542463, y: 0.6682784}
+  m_Size: {x: 0.55542463, y: 0.65640855}
   m_EdgeRadius: 0
 --- !u!114 &4796593281334309681
 MonoBehaviour:
@@ -354,9 +354,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBaseSpeed: 2.5
-  jumpForce: 250
+  jumpForce: 300
   jumpCounterMax: 1
-  dashForce: 200
+  dashForce: 600
   dashCounterMax: 1
   bulletPrefab: {fileID: 3038273351845655799, guid: e3f121efbfa1e8e48a2f79f892d13b44, type: 3}
   spawnPoint: {fileID: 4393146616381045004}

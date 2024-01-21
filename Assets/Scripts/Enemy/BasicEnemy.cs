@@ -30,14 +30,8 @@ public class BasicEnemy : NetworkBehaviour
     float currentX;
     float priorX;
 
-    // when player shoots get the player and then do everything
-
-
-    // explain all this, talk about how it only works for 2 people and therefore to improve make it so
-    // // multipel peopel could join
     private void Start()
     {
-
         StartCoroutine(FindPlayers());
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -75,10 +69,10 @@ public class BasicEnemy : NetworkBehaviour
         switch (enemyState)
         {
             case EnemyState.patrol:
-                {
-                    EnemyPosUpdateServerRPC(enemyPos, isAgro);
+                {                
+                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
                     MoveEnemy();
-                     SpriteFlipClientRpc(currentX, priorX);
+                    SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
             case EnemyState.seek:
@@ -96,7 +90,6 @@ public class BasicEnemy : NetworkBehaviour
     [ClientRpc]
     public void SeekClientRpc(Vector3 _enemyPos, Vector3 _closetPlayer)
     {
-
         Vector3 updatedEniPos = new(_enemyPos.x, 0, 0);
         Vector3 updatedPlayerPos = new(_closetPlayer.x, 0, 0);
 
@@ -141,11 +134,11 @@ public class BasicEnemy : NetworkBehaviour
         } 
     }
 
-    [ServerRpc]
-    private void EnemyPosUpdateServerRPC(Vector3 _enemyPos, bool _isAgro)
-    {
-       EnemyPosUpdateClientRPC(_enemyPos, _isAgro);
-    }
+    //[ServerRpc]
+    //private void EnemyPosUpdateServerRPC(Vector3 _enemyPos, bool _isAgro)
+    //{
+    //   EnemyPosUpdateClientRPC(_enemyPos, _isAgro);
+    //}
 
     [ClientRpc]
     private void SpriteFlipClientRpc(float _currentX, float _priorX)
@@ -179,7 +172,6 @@ public class BasicEnemy : NetworkBehaviour
         enemyPos = transform.position;     
     }
 
-    int flipCounter;
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Bullet"))

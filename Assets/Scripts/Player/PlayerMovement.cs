@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -52,8 +53,8 @@ public class PlayerMovement : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner) return;
-        Shoot();
         MovePlayer();
+        Shoot();
         Dash();
         Jump();
         FlipPlayerServerRPC(moveX);

@@ -356,7 +356,7 @@ MonoBehaviour:
   playerBaseSpeed: 2.5
   jumpForce: 300
   jumpCounterMax: 1
-  dashForce: 600
+  dashForce: 1200
   dashCounterMax: 1
   bulletPrefab: {fileID: 3038273351845655799, guid: e3f121efbfa1e8e48a2f79f892d13b44, type: 3}
   spawnPoint: {fileID: 4393146616381045004}

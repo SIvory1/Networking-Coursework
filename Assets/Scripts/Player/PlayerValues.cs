@@ -33,8 +33,7 @@ private void Update()
     public void TakeDamage(int _dmg)
     {
          UpdateHealthServerRPC(_dmg);
-      //  StartCoroutine(CheckHealth(_dmg));  
-       // CheckForDeath();
+         CheckForDeath();
     }
 
     IEnumerator CheckHealth(int _dmg)
@@ -70,7 +69,7 @@ private void Update()
         if (health.Value <= 0)
         {
             print("death con" + OwnerClientId);
-            GameManager.instance.uiManager.GameOverUIServerRPC();
+            GameManager.instance.uiManager.GameOverUIClientRPC();
         } 
     }
 

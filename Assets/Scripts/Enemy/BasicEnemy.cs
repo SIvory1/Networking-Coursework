@@ -202,7 +202,6 @@ public class BasicEnemy : NetworkBehaviour
     IEnumerator DestroyEnemy()
     {
         yield return new WaitForSeconds(2);
-        Destroy(gameObject);
         DestroyEnemyClientRpc();
     }
 

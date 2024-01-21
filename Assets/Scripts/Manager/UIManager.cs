@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : NetworkBehaviour
 {
@@ -35,20 +36,6 @@ public class UIManager : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    void GameOverUIClientRPC()
-    {
-        gameOverUI.SetActive(true);
-        Time.timeScale = 0;
-    }
-
-    [ServerRpc]
-    public void GameOverUIServerRPC()
-    {
-        GameOverUIClientRPC();
-    }
-
-
     void UpdateTimerUI(float _time)
     {
         float min = Mathf.FloorToInt(_time / 60);
@@ -57,6 +44,22 @@ public class UIManager : NetworkBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
+    [ClientRpc]
+    public void GameOverUIClientRPC()
+    {
+        gameOverUI.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ReplayGame()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     // quits client, if host shuts down game 
     public void DisconnectPlayers()
@@ -64,4 +67,9 @@ public class UIManager : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
+    [ServerRpc]
+    void GameOverUIServerRPC()
+    {
+        GameOverUIClientRPC();
+    }
 }

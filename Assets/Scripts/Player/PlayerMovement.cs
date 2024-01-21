@@ -161,7 +161,7 @@ public class PlayerMovement : NetworkBehaviour
         rb.AddForce(Vector2.up * 250);
         print("up");
         GetComponentInChildren<SpriteRenderer>().color = Color.red;
-        // GetComponent<PlayerValues>().TakeDamage(1);
+        if (IsOwner) { GetComponent<PlayerValues>().TakeDamage(1); }
         StartCoroutine(ResetIframes());
         iFrame = true;
     }

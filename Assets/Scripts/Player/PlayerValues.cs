@@ -72,14 +72,14 @@ public class PlayerValues : NetworkBehaviour
         } 
     }
 
-    void OnGUI()
-    {
-        GameObject[] thePlayers2 = GameObject.FindGameObjectsWithTag("Player");
-        int x = 0;
-        foreach (GameObject respawn in thePlayers2)
-        {
-            GUI.Label(new Rect(10, 60 + (15 * x), 300, 20), "PlayerID " + respawn.GetComponent<NetworkObject>().NetworkObjectId + " has the score of " + respawn.GetComponent<PlayerValues>().health);
-            x++;
-        }
-    }
+    //void OnGUI()
+    //{
+    //    GameObject[] thePlayers2 = GameObject.FindGameObjectsWithTag("Player");
+    //    int x = 0;
+    //    foreach (GameObject respawn in thePlayers2)
+    //    {
+    //        GUI.Label(new Rect(10, 60 + (15 * x), 300, 20), "PlayerID " + respawn.GetComponent<NetworkObject>().NetworkObjectId + " has the score of " + respawn.GetComponent<PlayerValues>().health);
+    //        x++;
+    //    }
+    //}
 }

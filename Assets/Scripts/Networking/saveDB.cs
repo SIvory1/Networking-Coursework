@@ -16,14 +16,15 @@ public class saveDB : NetworkBehaviour
     {
         XIsPressed = false;
 
-        playersScoresDictionary.Add(1, 15);
-        playersScoresDictionary.Add(2, 25);
+       
     }
 
     private void Update()
     {
         if (Input.GetKey(KeyCode.X) && !XIsPressed)
         {
+           // playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
+            playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
             //to make sure X is only pressed once
             XIsPressed = true;
             sendDataToServerScript();

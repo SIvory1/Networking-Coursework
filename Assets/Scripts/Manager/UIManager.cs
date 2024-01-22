@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : NetworkBehaviour
 {
     [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] float time;
+    [SerializeField] public float time;
     [SerializeField] GameObject gameOverUI;
 
     private void Start()

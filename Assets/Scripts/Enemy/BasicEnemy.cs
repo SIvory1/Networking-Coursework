@@ -69,9 +69,9 @@ public class BasicEnemy : NetworkBehaviour
         switch (enemyState)
         {
             case EnemyState.patrol:
-                {                
-                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
+                {           
                     MoveEnemy();
+                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
                     SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
@@ -90,8 +90,8 @@ public class BasicEnemy : NetworkBehaviour
     [ClientRpc]
     public void SeekClientRpc(Vector3 _enemyPos, Vector3 _closetPlayer)
     {
-        Vector3 updatedEniPos = new(_enemyPos.x, 0, 0);
-        Vector3 updatedPlayerPos = new(_closetPlayer.x, 0, 0);
+        Vector3 updatedEniPos = new(_enemyPos.x, transform.position.y, 0);
+        Vector3 updatedPlayerPos = new(_closetPlayer.x, transform.position.y, 0);
 
         // Get the desired velocity for seek and limit to maxSpeed
         desiredVelocity = Vector3.Normalize(updatedPlayerPos - updatedEniPos) * speed;
@@ -168,9 +168,10 @@ public class BasicEnemy : NetworkBehaviour
 
     private void MoveEnemy()
     {
-        transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), -3.91f, 0);
+        transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), transform.position.y, 0);
         enemyPos = transform.position;     
     }
+
 
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -186,6 +187,7 @@ public class BasicEnemy : NetworkBehaviour
                     isAgro = false;
                     animator.SetBool("TakenDMG", true);
                     StartCoroutine(DestroyEnemy());
+                   // GameManager.instance.CheckEnemyCount();
                     break;
             }
         }      

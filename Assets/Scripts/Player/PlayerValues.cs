@@ -8,6 +8,8 @@ public class PlayerValues : NetworkBehaviour
 {
 
     public NetworkVariable<int> health = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> score = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     int maxHealth = 5;
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] Slider healthSlider;
@@ -48,13 +50,13 @@ private void Update()
         if (IsOwner)
         {
             health.Value -= _dmg;
-            healthSlider.value = health.Value;
+            GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject obj in _healhText)
+            {
+                obj.GetComponent<PlayerValues>().healthSlider.value = obj.GetComponent<PlayerValues>().health.Value;
 
+            }
         }
-        // GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
-        // foreach (GameObject obj in _healhText)
-        // {
-        // }
     }
 
     [ServerRpc]
@@ -69,7 +71,7 @@ private void Update()
         if (health.Value <= 0)
         {
             print("death con" + OwnerClientId);
-            GameManager.instance.uiManager.GameOverUIClientRPC();
+            //GameManager.instance.uiManager.GameOverUIClientRPC();
         } 
     }
 

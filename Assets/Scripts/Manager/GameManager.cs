@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager { get; private set; }
     public AudioManager audioManager { get; private set; }
 
+    public float enemyCounter = 2;
 
     private void Awake()
     {
@@ -26,45 +27,20 @@ public class GameManager : MonoBehaviour
         InitSystems();
     }       
 
-
     private void InitSystems()
     {
         uiManager = GetComponent<UIManager>();
         audioManager = GetComponent<AudioManager>();
     }
 
-    private void Update()
+    public void CheckEnemyCount()
     {
-      //  if (IsClient)
-      //  {
-           // NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-     //   }
-    }
+        enemyCounter--;
 
-
-    // in lobby system do it after when everyone joins easy peasy
-    private void OnClientConnected(ulong clientId)
-    {
-        if (clientId == NetworkManager.Singleton.LocalClientId)
+        if (enemyCounter <= 0)
         {
-            //GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-            //    for (int i = 0; i < enemies.Length; i++)
-            //    {
-            //        enemies[i].GetComponent<BasicEnemy>()._player = GameObject.FindGameObjectsWithTag("Player");
-            //        enemies[i].GetComponent<BasicEnemy>().distanceFromPlayer = new float[enemies[i].GetComponent<BasicEnemy>()._player.Length];
-            //    }
-            print("john");
-            
+           // uiManager.GameOverUIClientRPC();
         }
-
-    }
-
-
-    void OnPlayerConnected()
-    {
-        print("ronbald");
-
     }
 
 }

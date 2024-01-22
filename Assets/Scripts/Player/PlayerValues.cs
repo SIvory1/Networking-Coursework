@@ -7,71 +7,68 @@ using UnityEngine.UI;
 public class PlayerValues : NetworkBehaviour
 {
 
-    public NetworkVariable<int> health = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> score = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
+    int health;
     int maxHealth = 5;
-    [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] Slider healthSlider;
 
     public override void OnNetworkSpawn()
     { 
-        if (IsOwner)
-        {
-            health.Value = maxHealth;
+            health = maxHealth;
             healthSlider.maxValue = maxHealth;
-            healthSlider.value = health.Value;
-        }
+            healthSlider.value = health;  
     }
 
-private void Update()
+    private void Update()
     {
+        UpdateHealthClientRpc(health);
+
         if (!IsOwner) return;
         if (Input.GetMouseButtonDown(0))
-            // almost works, whoever takes dmg- on the other screen they are 1 health behind
             TakeDamage(1);
+    }
+
+    // ineffiecent but updates for late joining
+    [ClientRpc]
+    void UpdateHealthClientRpc(int _health)
+    {
+        healthSlider.value = _health;
     }
 
     public void TakeDamage(int _dmg)
     {
          UpdateHealthServerRPC(_dmg);
-         CheckForDeath();
-    }
-
-    IEnumerator CheckHealth(int _dmg)
-    {
-        yield return new WaitForSeconds(0.25f);
-        UpdateHealthServerRPC(_dmg);
+         CheckForDeathServerRpc(health);
     }
 
     [ClientRpc]
-    void UpdateHealthClientRPC(int _dmg)
+    void UpdateHealthClientRPC(int _health)
     {
-        if (IsOwner)
-        {
-            health.Value -= _dmg;
-            GameObject[] _healhText = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject obj in _healhText)
-            {
-                obj.GetComponent<PlayerValues>().healthSlider.value = obj.GetComponent<PlayerValues>().health.Value;
-
-            }
-        }
+           healthSlider.value = _health;
     }
+
 
     [ServerRpc]
     void UpdateHealthServerRPC(int _dmg)
     {
-        UpdateHealthClientRPC(_dmg);
+        health -= _dmg;
+
+        UpdateHealthClientRPC(health);
     }
 
-    // player cant trigger this themself 
-    void CheckForDeath()
+    [ServerRpc]
+    void CheckForDeathServerRpc(int _health)
     {
-        if (health.Value <= 0)
+        CheckForDeathClientRpc(_health);
+    }
+
+     [ClientRpc]
+    void CheckForDeathClientRpc(int _health)
+    {
+        if (_health <= 0)
         {
             print("death con" + OwnerClientId);
-            //GameManager.instance.uiManager.GameOverUIClientRPC();
+            GameManager.instance.uiManager.GameOverUIClientRPC();
         } 
     }
 
@@ -81,7 +78,7 @@ private void Update()
         int x = 0;
         foreach (GameObject respawn in thePlayers2)
         {
-            GUI.Label(new Rect(10, 60 + (15 * x), 300, 20), "PlayerID " + respawn.GetComponent<NetworkObject>().NetworkObjectId + " has the score of " + respawn.GetComponent<PlayerValues>().health.Value);
+            GUI.Label(new Rect(10, 60 + (15 * x), 300, 20), "PlayerID " + respawn.GetComponent<NetworkObject>().NetworkObjectId + " has the score of " + respawn.GetComponent<PlayerValues>().health);
             x++;
         }
     }

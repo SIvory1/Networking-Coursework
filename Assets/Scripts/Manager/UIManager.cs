@@ -58,6 +58,7 @@ public class UIManager : NetworkBehaviour
 
     public void ReplayGame()
     {
+        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
     }
 

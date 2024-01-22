@@ -32,7 +32,7 @@ public class BasicEnemy : NetworkBehaviour
 
     private void Start()
     {
-        StartCoroutine(FindPlayers());
+      //  StartCoroutine(FindPlayers());
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
@@ -168,6 +168,7 @@ public class BasicEnemy : NetworkBehaviour
 
     private void MoveEnemy()
     {
+        if (!isAgro) return;
         transform.position = new Vector3(Mathf.PingPong(Time.time * speed, distance), transform.position.y, 0);
         enemyPos = transform.position;     
     }
@@ -181,6 +182,9 @@ public class BasicEnemy : NetworkBehaviour
             switch (enemyHealth)
             {
                 case (1):
+                    _player = GameObject.FindGameObjectsWithTag("Player");
+                    print(_player.Length);
+                    distanceFromPlayer = new float[_player.Length];
                     enemyState = EnemyState.seek;
                     break;
                case (2):

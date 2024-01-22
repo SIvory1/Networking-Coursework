@@ -8,7 +8,7 @@ public class ReadFromLeaderboard : MonoBehaviour
     string[] theResultString;
     bool getDataSuccess;
 
-    IEnumerator Start()
+    public IEnumerator ReadData()
     {
         //the delimiter basically to parse the data which in this case we are going to use ‘&’ to distinguish new row / data record
         char[] delimiterChars = { '&' };

@@ -68,6 +68,7 @@ public class PlayerValues : NetworkBehaviour
         if (_health <= 0)
         {
             print("death con" + OwnerClientId);
+            GameManager.instance.uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
             GameManager.instance.uiManager.GameOverUIClientRPC();
         } 
     }

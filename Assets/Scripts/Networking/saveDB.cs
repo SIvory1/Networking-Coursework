@@ -5,30 +5,23 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
+public struct PlayerData
+{
+    public ulong playerID;
+    public int time;
+    public int health;
+}
+
 public class saveDB : NetworkBehaviour
 {
 
-    bool XIsPressed;
-
+    PlayerData playerData;
     Dictionary<ulong, int> playersScoresDictionary = new Dictionary<ulong, int>();
 
-    void Start()
+    public void PostData()
     {
-        XIsPressed = false;
-
-       
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.X) && !XIsPressed)
-        {
-           // playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
-            playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
-            //to make sure X is only pressed once
-            XIsPressed = true;
-            sendDataToServerScript();
-        }
+        playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
+        sendDataToServerScript();
     }
 
     void sendDataToServerScript()
@@ -59,7 +52,7 @@ public class saveDB : NetworkBehaviour
             }
             if (xcount == playersScoresDictionary.Count)
             {
-                changeSceneServerRpc();
+               // changeSceneServerRpc();
             }
 
             www.Dispose();

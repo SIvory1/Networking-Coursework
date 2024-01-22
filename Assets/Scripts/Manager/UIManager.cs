@@ -11,6 +11,8 @@ public class UIManager : NetworkBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] public float time;
     [SerializeField] GameObject gameOverUI;
+    [SerializeField] public GameObject LeaderBoardObject;
+
 
     private void Start()
     {
@@ -47,8 +49,9 @@ public class UIManager : NetworkBehaviour
     [ClientRpc]
     public void GameOverUIClientRPC()
     {
+        StartCoroutine(LeaderBoardObject.GetComponent<ReadFromLeaderboard>().ReadData());
         gameOverUI.SetActive(true);
-        Time.timeScale = 0;
+      //  Time.timeScale = 0;
     }
 
     public void QuitGame()

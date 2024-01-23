@@ -114,15 +114,12 @@ public class BasicEnemy : NetworkBehaviour
             {
                   closetPlayer = _player[0].transform.position;
             }
-        }
-   
+        } 
     }
 
     [ClientRpc]
     private void SpriteFlipClientRpc(float _currentX, float _priorX)
     {
-        if (IsServer)
-        {
             if (_priorX > _currentX)
             {
                 sprite.flipX = true;
@@ -135,7 +132,6 @@ public class BasicEnemy : NetworkBehaviour
                 priorX = _currentX;
                 currentX = transform.position.x;
             }
-        }
     }
 
     [ClientRpc]

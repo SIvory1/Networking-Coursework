@@ -19,7 +19,12 @@ public class saveDB : NetworkBehaviour
 
     public void PostData()
     {
-        playersScoresDictionary.Add(UIManager.playerName, (int)GameManager.instance.uiManager.time);
+        // need is host for client to see ui 
+        if (IsServer)
+        {
+            playersScoresDictionary.Add(UIManager.playerName, (int)GameManager.instance.uiManager.time);
+        }
+        // tske too long
         sendDataToServerScript();
     }
 
@@ -49,25 +54,8 @@ public class saveDB : NetworkBehaviour
 
                 Debug.Log(www.downloadHandler.text);
             }
-            if (xcount == playersScoresDictionary.Count)
-            {
-               // changeSceneServerRpc();
-            }
 
             www.Dispose();
         }
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void changeSceneServerRpc()
-    {
-        var status = NetworkManager.SceneManager.LoadScene("leaderboard", LoadSceneMode.Single);
-
-        if (status != SceneEventProgressStatus.Started)
-        {
-            Debug.LogWarning($"Failed to load {"leaderboard"} " +
-                  $"with a {nameof(SceneEventProgressStatus)}: {status}");
-        }
-    }
-
 }

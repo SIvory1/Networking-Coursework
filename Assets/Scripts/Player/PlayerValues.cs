@@ -21,33 +21,29 @@ public class PlayerValues : NetworkBehaviour
     private void Update()
     {
         UpdateHealthClientRpc(health);
+        CheckForDeathClientRpc(health);
     }
 
     // ineffiecent but updates for late joining
     [ClientRpc]
     void UpdateHealthClientRpc(int _health)
     {
+        if (healthSlider.value != _health)
+        {
         healthSlider.value = _health;
+        }
     }
 
     public void TakeDamage(int _dmg)
     {
         UpdateHealthServerRPC(_dmg);
-        if (IsServer) CheckForDeathServerRpc(health);
-    }
-
-    [ClientRpc]
-    void UpdateHealthClientRPC(int _health)
-    {
-           healthSlider.value = _health;
+        CheckForDeathServerRpc(health);
     }
 
     [ServerRpc]
     void UpdateHealthServerRPC(int _dmg)
     {
         health -= _dmg;
-
-        UpdateHealthClientRPC(health);
     }
 
     [ServerRpc]
@@ -56,14 +52,17 @@ public class PlayerValues : NetworkBehaviour
         CheckForDeathClientRpc(_health);
     }
 
+    bool once = false;
+
     [ClientRpc]
     void CheckForDeathClientRpc(int _health)
     {
-        if (_health <= 0)
+        if (_health == 0 && !once)
         {
-            print("inhere");
-            GameManager.instance.uiManager.GameOverUIServerRPC();
-        } 
+         //   print(_health);
+            GameManager.instance.uiManager.GameOver();
+            once = true;
+        }
     }
 
     //void OnGUI()

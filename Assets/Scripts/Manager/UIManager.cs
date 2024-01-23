@@ -42,6 +42,7 @@ public class UIManager : NetworkBehaviour
         if (time <= 0)
         {
             print("its over john... we did it");
+            GameOver();
         }
         else
         {
@@ -58,15 +59,15 @@ public class UIManager : NetworkBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
-    [ClientRpc]
-    public void GameOverUIClientRPC()
-    {
+    public void GameOver()
+    {     
         GameObject databaseObj = GameObject.FindGameObjectWithTag("Database");
-
+        // host time doesnt freeze so he gets stuck in here
         databaseObj.GetComponent<saveDB>().PostData();
         StartCoroutine(databaseObj.GetComponent<ReadFromLeaderboard>().ReadData());
 
         gameOverUI.SetActive(true);
+
         Time.timeScale = 0;
     }
 
@@ -78,7 +79,6 @@ public class UIManager : NetworkBehaviour
     public void ReplayGame()
     {
         GameObject networkObject = GameObject.FindGameObjectWithTag("NetworkManager");
-        //  Time.timeScale = 1;
         Destroy(networkObject);
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
@@ -89,10 +89,4 @@ public class UIManager : NetworkBehaviour
     {
         NetworkManager.Singleton.Shutdown();
     }
-
-   [ServerRpc(RequireOwnership = false)]
-   public void GameOverUIServerRPC()
-   {
-        GameOverUIClientRPC();
-   }
 }

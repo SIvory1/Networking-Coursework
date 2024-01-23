@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : NetworkBehaviour
 {
@@ -12,16 +10,30 @@ public class UIManager : NetworkBehaviour
     [SerializeField] public float time;
     [SerializeField] GameObject gameOverUI;
     [SerializeField] public GameObject LeaderBoardObject;
+    public TextMeshProUGUI inputBox;
+    public static string playerName;
 
 
     private void Start()
     {
-        UpdateTimerUI(time);
+        if (timerText != null)
+        {
+            UpdateTimerUI(time);
+        }
     }
 
     private void Update()
     {
-        UpdateTimeClientRpc(time -= Time.deltaTime);
+         if (timerText != null)
+         {
+              UpdateTimeClientRpc(time -= Time.deltaTime);
+         }
+
+        // print(playerName);
+        if (inputBox != null)
+        {
+            playerName = inputBox.text.ToString();
+        }
     }
 
     [ClientRpc]
@@ -51,7 +63,7 @@ public class UIManager : NetworkBehaviour
     {
         StartCoroutine(LeaderBoardObject.GetComponent<ReadFromLeaderboard>().ReadData());
         gameOverUI.SetActive(true);
-      //  Time.timeScale = 0;
+        Time.timeScale = 0;
     }
 
     public void QuitGame()
@@ -61,6 +73,9 @@ public class UIManager : NetworkBehaviour
 
     public void ReplayGame()
     {
+        GameObject networkObject = GameObject.FindGameObjectWithTag("NetworkManager");
+        //  Time.timeScale = 1;
+        Destroy(networkObject);
         NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("MainMenu");
     }

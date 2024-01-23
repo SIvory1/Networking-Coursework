@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2769328619
+  GlobalObjectIdHash: 1760411095
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -356,7 +356,7 @@ MonoBehaviour:
   playerBaseSpeed: 2.5
   jumpForce: 300
   jumpCounterMax: 1
-  dashForce: 1200
+  dashForce: 3000
   dashCounterMax: 1
   bulletPrefab: {fileID: 3038273351845655799, guid: e3f121efbfa1e8e48a2f79f892d13b44, type: 3}
   spawnPoint: {fileID: 4393146616381045004}
@@ -414,9 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d652baaef46838845adb3a12efd13981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health:
-    m_InternalValue: 0
-  healthText: {fileID: 3258227308861734591}
+  maxHealth: 2
   healthSlider: {fileID: 7933932598707134205}
 --- !u!1 &2801717857351818354
 GameObject:

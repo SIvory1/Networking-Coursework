@@ -32,7 +32,6 @@ public class BasicEnemy : NetworkBehaviour
 
     private void Start()
     {
-      //  StartCoroutine(FindPlayers());
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
@@ -44,32 +43,14 @@ public class BasicEnemy : NetworkBehaviour
         priorX = transform.position.x;
     }
 
-    // cant press too quick or gamebreaks
-    IEnumerator FindPlayers()
-    {
-        yield return new WaitForSeconds(5f);
-        _player = GameObject.FindGameObjectsWithTag("Player");
-        print(_player.Length);
-        distanceFromPlayer = new float[_player.Length];
-    }
-
     // sync when they join
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            enemyState = EnemyState.seek;
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            enemyState = EnemyState.patrol;
-        }
-
         switch (enemyState)
         {
             case EnemyState.patrol:
-                {           
+                {      
+
                     MoveEnemy();
                     EnemyPosUpdateClientRPC(enemyPos, isAgro);
                     SpriteFlipClientRpc(currentX, priorX);
@@ -78,13 +59,15 @@ public class BasicEnemy : NetworkBehaviour
             case EnemyState.seek:
                 {
                     FindClosestPlayerClientRpc();
-                    SeekClientRpc(enemyPos, closetPlayer);
-                    SpriteFlipClientRpc(currentX, priorX);
+                    if (isAgro)
+                    {
+                        SeekClientRpc(enemyPos, closetPlayer);
+                        SpriteFlipClientRpc(currentX, priorX);
+                    }             
                 }
                 break;
         }
     }
-
 
     // lock to x and flip to look
     [ClientRpc]
@@ -103,7 +86,6 @@ public class BasicEnemy : NetworkBehaviour
 
         enemyPos = transform.position;
     }
-
 
     [ClientRpc]
     void FindClosestPlayerClientRpc()
@@ -191,7 +173,6 @@ public class BasicEnemy : NetworkBehaviour
                     isAgro = false;
                     animator.SetBool("TakenDMG", true);
                     StartCoroutine(DestroyEnemy());
-                   // GameManager.instance.CheckEnemyCount();
                     break;
             }
         }      
@@ -206,6 +187,7 @@ public class BasicEnemy : NetworkBehaviour
     [ClientRpc]
     void DestroyEnemyClientRpc()
     {
+        GameManager.instance.CheckEnemyCount();
         Destroy(gameObject);
     }
 }

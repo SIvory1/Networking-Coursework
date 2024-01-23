@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
         if (enemyCounter <= 0)
         {
-           // uiManager.GameOverUIClientRPC();
+            uiManager.GameOverUIClientRPC();
         }
     }
 

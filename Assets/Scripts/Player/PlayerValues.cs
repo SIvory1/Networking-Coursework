@@ -7,9 +7,8 @@ using UnityEngine.UI;
 public class PlayerValues : NetworkBehaviour
 {
 
-    public NetworkVariable<int> score = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     int health;
-    int maxHealth = 5;
+    [SerializeField] int maxHealth;
     [SerializeField] Slider healthSlider;
 
     public override void OnNetworkSpawn()
@@ -24,8 +23,8 @@ public class PlayerValues : NetworkBehaviour
         UpdateHealthClientRpc(health);
 
         if (!IsOwner) return;
-        if (Input.GetMouseButtonDown(0))
-            TakeDamage(1);
+        if (Input.GetMouseButtonDown(0)) ;
+         //   TakeDamage(1);
     }
 
     // ineffiecent but updates for late joining
@@ -47,7 +46,6 @@ public class PlayerValues : NetworkBehaviour
            healthSlider.value = _health;
     }
 
-
     [ServerRpc]
     void UpdateHealthServerRPC(int _dmg)
     {
@@ -62,12 +60,11 @@ public class PlayerValues : NetworkBehaviour
         CheckForDeathClientRpc(_health);
     }
 
-     [ClientRpc]
+    [ClientRpc]
     void CheckForDeathClientRpc(int _health)
     {
         if (_health <= 0)
         {
-            print("death con" + OwnerClientId);
             GameManager.instance.uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
             GameManager.instance.uiManager.GameOverUIClientRPC();
         } 

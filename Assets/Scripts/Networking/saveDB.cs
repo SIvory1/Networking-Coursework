@@ -15,12 +15,11 @@ public struct PlayerData
 public class saveDB : NetworkBehaviour
 {
 
-    PlayerData playerData;
-    Dictionary<ulong, int> playersScoresDictionary = new Dictionary<ulong, int>();
+    Dictionary<string, int> playersScoresDictionary = new Dictionary<string, int>();
 
     public void PostData()
     {
-        playersScoresDictionary.Add(OwnerClientId, (int)GameManager.instance.uiManager.time);
+        playersScoresDictionary.Add(UIManager.playerName, (int)GameManager.instance.uiManager.time);
         sendDataToServerScript();
     }
 
@@ -32,10 +31,10 @@ public class saveDB : NetworkBehaviour
     IEnumerator toDatabase()
     {
         int xcount = 0;
-        foreach (KeyValuePair<ulong, int> entry in playersScoresDictionary)
+        foreach (KeyValuePair<string, int> entry in playersScoresDictionary)
         {
             WWWForm form = new WWWForm();
-            form.AddField("clientid", (int)entry.Key);
+            form.AddField("clientid", entry.Key);
             form.AddField("score", entry.Value);
             UnityWebRequest www = UnityWebRequest.Post("http://localhost/unityMultiplayerLeaderboard/leaderboard.php", form);
             yield return www.SendWebRequest();

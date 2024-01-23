@@ -160,7 +160,6 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (_iFrame) return; 
         rb.AddForce(Vector2.up * 250);
-        print("up");
         GetComponentInChildren<SpriteRenderer>().color = Color.red;
         if (IsOwner) { GetComponent<PlayerValues>().TakeDamage(1); }
         StartCoroutine(ResetIframes());

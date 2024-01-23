@@ -2093,7 +2093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3773026695178355518, guid: 5dcd574294ab9c64eb803691a7eb440c, type: 3}
       propertyPath: time
-      value: 45
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3773026695178355518, guid: 5dcd574294ab9c64eb803691a7eb440c, type: 3}
       propertyPath: timerText

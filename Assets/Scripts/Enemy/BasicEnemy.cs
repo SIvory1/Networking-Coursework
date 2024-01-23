@@ -71,8 +71,8 @@ public class BasicEnemy : NetworkBehaviour
     [ClientRpc]
     public void SeekClientRpc(Vector3 _enemyPos, Vector3 _closetPlayer)
     {
-        Vector3 updatedEniPos = new(_enemyPos.x, transform.position.y, 0);
-        Vector3 updatedPlayerPos = new(_closetPlayer.x, transform.position.y, 0);
+        Vector3 updatedEniPos = new(_enemyPos.x, _enemyPos.y, 0);
+        Vector3 updatedPlayerPos = new(_closetPlayer.x, _enemyPos.y, 0);
 
         // Get the desired velocity for seek and limit to maxSpeed
         desiredVelocity = Vector3.Normalize(updatedPlayerPos - updatedEniPos) * speed;
@@ -150,7 +150,6 @@ public class BasicEnemy : NetworkBehaviour
         enemyPos = transform.position;     
     }
 
-
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Bullet"))
@@ -164,7 +163,7 @@ public class BasicEnemy : NetworkBehaviour
                     distanceFromPlayer = new float[_player.Length];
                     enemyState = EnemyState.seek;
                     break;
-               case (2):
+               case (5):
                     isAgro = false;
                     animator.SetBool("TakenDMG", true);
                     StartCoroutine(DestroyEnemy());
@@ -182,6 +181,7 @@ public class BasicEnemy : NetworkBehaviour
     [ClientRpc]
     void DestroyEnemyClientRpc()
     {
+        GameManager.instance.audioManager.PlayDeathServerRPC();
         GameManager.instance.CheckEnemyCount();
         Destroy(gameObject);
     }

@@ -79,8 +79,8 @@ public class UIManager : NetworkBehaviour
     public void ReplayGame()
     {
         GameObject networkObject = GameObject.FindGameObjectWithTag("NetworkManager");
-        Destroy(networkObject);
-        NetworkManager.Singleton.Shutdown();
+        Destroy(networkObject); 
+       // NetworkManager.Singleton.SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
         SceneManager.LoadScene("MainMenu");
     }
 

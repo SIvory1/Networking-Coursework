@@ -21,10 +21,6 @@ public class PlayerValues : NetworkBehaviour
     private void Update()
     {
         UpdateHealthClientRpc(health);
-
-        if (!IsOwner) return;
-        if (Input.GetMouseButtonDown(0)) ;
-         //   TakeDamage(1);
     }
 
     // ineffiecent but updates for late joining
@@ -36,8 +32,8 @@ public class PlayerValues : NetworkBehaviour
 
     public void TakeDamage(int _dmg)
     {
-         UpdateHealthServerRPC(_dmg);
-         CheckForDeathServerRpc(health);
+        UpdateHealthServerRPC(_dmg);
+        if (IsServer) CheckForDeathServerRpc(health);
     }
 
     [ClientRpc]
@@ -65,6 +61,7 @@ public class PlayerValues : NetworkBehaviour
     {
         if (_health <= 0)
         {
+            print("inhere");
             GameManager.instance.uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
             GameManager.instance.uiManager.GameOverUIClientRPC();
         } 

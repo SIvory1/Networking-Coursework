@@ -3,7 +3,6 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
 public class BasicEnemy : NetworkBehaviour
 {
 
@@ -50,7 +49,6 @@ public class BasicEnemy : NetworkBehaviour
         {
             case EnemyState.patrol:
                 {      
-
                     MoveEnemy();
                     EnemyPosUpdateClientRPC(enemyPos, isAgro);
                     SpriteFlipClientRpc(currentX, priorX);
@@ -99,43 +97,44 @@ public class BasicEnemy : NetworkBehaviour
             }
         }
 
-        if (_player.Length > 1)
+        if (IsServer)
         {
-            if (distanceFromPlayer[0] < distanceFromPlayer[1])
+            if (_player.Length > 1)
             {
-                closetPlayer = _player[0].transform.position;
+                if (distanceFromPlayer[0] < distanceFromPlayer[1])
+                {
+                    closetPlayer = _player[0].transform.position;
+                }
+                else
+                {
+                    closetPlayer = _player[1].transform.position;
+                }
             }
             else
             {
-                closetPlayer = _player[1].transform.position;
+                  closetPlayer = _player[0].transform.position;
             }
         }
-        else
-        {
-            closetPlayer = _player[0].transform.position;
-        } 
+   
     }
-
-    //[ServerRpc]
-    //private void EnemyPosUpdateServerRPC(Vector3 _enemyPos, bool _isAgro)
-    //{
-    //   EnemyPosUpdateClientRPC(_enemyPos, _isAgro);
-    //}
 
     [ClientRpc]
     private void SpriteFlipClientRpc(float _currentX, float _priorX)
     {
-        if (_priorX > _currentX)
+        if (IsServer)
         {
-            sprite.flipX = true;
-            priorX = _currentX;
-            currentX = transform.position.x;
-        }
-        else
-        {
-            sprite.flipX = false;
-            priorX = _currentX;
-            currentX = transform.position.x;
+            if (_priorX > _currentX)
+            {
+                sprite.flipX = true;
+                priorX = _currentX;
+                currentX = transform.position.x;
+            }
+            else
+            {
+                sprite.flipX = false;
+                priorX = _currentX;
+                currentX = transform.position.x;
+            }
         }
     }
 

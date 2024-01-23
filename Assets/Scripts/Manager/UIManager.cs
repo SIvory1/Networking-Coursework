@@ -62,6 +62,7 @@ public class UIManager : NetworkBehaviour
     public void GameOverUIClientRPC()
     {
         StartCoroutine(LeaderBoardObject.GetComponent<ReadFromLeaderboard>().ReadData());
+
         gameOverUI.SetActive(true);
         Time.timeScale = 0;
     }

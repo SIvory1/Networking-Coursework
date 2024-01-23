@@ -62,8 +62,7 @@ public class PlayerValues : NetworkBehaviour
         if (_health <= 0)
         {
             print("inhere");
-            GameManager.instance.uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
-            GameManager.instance.uiManager.GameOverUIClientRPC();
+            GameManager.instance.uiManager.GameOverUIServerRPC();
         } 
     }
 

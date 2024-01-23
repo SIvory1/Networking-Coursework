@@ -40,8 +40,8 @@ public class GameManager : MonoBehaviour
 
         if (enemyCounter <= 0)
         {
-            uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
-            uiManager.GameOverUIClientRPC();
+           // uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
+            uiManager.GameOverUIServerRPC();
         }
     }
 

@@ -61,7 +61,10 @@ public class UIManager : NetworkBehaviour
     [ClientRpc]
     public void GameOverUIClientRPC()
     {
-        StartCoroutine(LeaderBoardObject.GetComponent<ReadFromLeaderboard>().ReadData());
+        GameObject databaseObj = GameObject.FindGameObjectWithTag("Database");
+
+        databaseObj.GetComponent<saveDB>().PostData();
+        StartCoroutine(databaseObj.GetComponent<ReadFromLeaderboard>().ReadData());
 
         gameOverUI.SetActive(true);
         Time.timeScale = 0;
@@ -87,9 +90,9 @@ public class UIManager : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
-    [ServerRpc]
-    void GameOverUIServerRPC()
-    {
+   [ServerRpc(RequireOwnership = false)]
+   public void GameOverUIServerRPC()
+   {
         GameOverUIClientRPC();
-    }
+   }
 }

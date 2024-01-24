@@ -33,14 +33,12 @@ public class GameManager : MonoBehaviour
         audioManager = GetComponent<AudioManager>();
     }
 
-    //[ClientRpc]
     public void CheckEnemyCount()
     {
         enemyCounter--;
 
         if (enemyCounter <= 0)
         {
-           // uiManager.LeaderBoardObject.GetComponent<saveDB>().PostData();
             uiManager.GameOver();
         }
     }

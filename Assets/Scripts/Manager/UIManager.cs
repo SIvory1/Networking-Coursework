@@ -2,7 +2,6 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class UIManager : NetworkBehaviour
 {
@@ -12,7 +11,6 @@ public class UIManager : NetworkBehaviour
     [SerializeField] public GameObject LeaderBoardObject;
     public TextMeshProUGUI inputBox;
     public static string playerName;
-
 
     private void Start()
     {
@@ -29,7 +27,6 @@ public class UIManager : NetworkBehaviour
               UpdateTimeClientRpc(time -= Time.deltaTime);
          }
 
-        // print(playerName);
         if (inputBox != null)
         {
             playerName = inputBox.text.ToString();

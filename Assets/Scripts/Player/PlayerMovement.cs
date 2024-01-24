@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -34,9 +32,6 @@ public class PlayerMovement : NetworkBehaviour
     private SpriteRenderer sprite;
 
     bool iFrame;
-
-    // we trust the client
-    // updated tick rate
 
     public override void OnNetworkSpawn()
     {
@@ -166,6 +161,7 @@ public class PlayerMovement : NetworkBehaviour
         iFrame = true;
     }
 
+   
     [ServerRpc]
     void CollideWithEnemyServerRpc(bool _iFrame)
     {

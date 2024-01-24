@@ -19,12 +19,10 @@ public class saveDB : NetworkBehaviour
 
     public void PostData()
     {
-        // need is host for client to see ui 
         if (IsServer)
         {
             playersScoresDictionary.Add(UIManager.playerName, (int)GameManager.instance.uiManager.time);
         }
-        // tske too long
         sendDataToServerScript();
     }
 

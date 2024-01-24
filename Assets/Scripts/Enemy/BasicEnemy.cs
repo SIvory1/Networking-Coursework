@@ -50,7 +50,7 @@ public class BasicEnemy : NetworkBehaviour
             case EnemyState.patrol:
                 {      
                     MoveEnemy();
-                    EnemyPosUpdateClientRPC(enemyPos, isAgro);
+                    EnemyPosUpdateClientRpc(enemyPos, isAgro);
                     SpriteFlipClientRpc(currentX, priorX);
                 }
                 break;
@@ -135,7 +135,7 @@ public class BasicEnemy : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void EnemyPosUpdateClientRPC(Vector3 _enemyPos, bool _isAgro)
+    private void EnemyPosUpdateClientRpc(Vector3 _enemyPos, bool _isAgro)
     {
         if (_isAgro)
         {
